@@ -1,0 +1,24 @@
+#full-screen {
+    background-color: #222;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#app-container {
+    background-color: white;
+    width: 80%;
+    height: 80%;
+    display: flex;
+}
+
+#sidebar {
+    width: 20%;
+}
+
+#main-section {
+    flex-grow: 1;
+}
+

@@ -1,0 +1,23 @@
+[
+    {
+        "id": 100,
+        "title": "Note 1",
+        "body": "This is the body for Note 1",
+        "date_created": "2024-07-04",
+        "date_modified": "2024-07-07"
+    },
+    {
+        "id": 200,
+        "title": "Note 2",
+        "body": "This is the body for Note 2",
+        "date_created": "2024-07-06",
+        "date_modified": "2024-07-06"
+    },
+    {
+        "id": 300,
+        "title": "Note 3",
+        "body": "This is the body for Note 3",
+        "date_created": "2024-07-09",
+        "date_modified": "2024-07-10"
+    }
+]
