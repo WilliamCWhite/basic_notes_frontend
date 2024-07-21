@@ -5,81 +5,136 @@ import Sidebar from './components/Sidebar.jsx'
 import TitleBar from './components/TitleBar.jsx'
 import NoteContent from './components/NoteContent.jsx'
 
-import baseNoteData from './assets/temp_notes.json'
-
 const serverURL = 'http://localhost:3000/'
 
 function App() {
-    const [notesArray, setNotesArray] = useState(undefined);
-    const [selectedNoteIndex, setSelectedNoteIndex] = useState(0);
-    const [searchProperty, setSearchProperty] = useState('time_modified');
+    const [notesArray, setNotesArray] = useState();
+    const [selectedNoteIndex, setSelectedNoteIndex] = useState();
+    const [selectedNoteId, setSelectedNoteId] = useState();
+    const [sortProperty, setSortProperty] = useState('time_modified');
     const [sortMethod, setSortMethod] = useState('DESC');
+    const [createNoteTrigger, setCreateNoteTrigger] = useState(false);
 
+    // GET fetching useEffect
     useEffect(() => {
+        let ignore = false;
+
         async function fetchData() {
             try {
-                const response = await fetch(`http://localhost:3000/notes?${searchProperty}=${sortMethod}`);
+                const response = await fetch(`http://localhost:3000/notes`);
                 const data = await response.json();
-                setNotesArray(data);
+                if (!ignore) {
+                    sortNotesArray(data);
+                    setSelectedNoteId(data[0].note_id);
+                }
             } catch (error) {
-                console.log(error);
+                console.error(error);
             }
         }
+
         fetchData();
-    }, [searchProperty, sortMethod])
+        return () => { ignore = true }
+    }, []);
 
-    async function createNewNote() {
-        console.log("Entered createNewNote")
+    // POST fetching useEffect
+    useEffect(() => {
+        if (createNoteTrigger) {
+            setCreateNoteTrigger(false);
 
-        try {
-            const response = await fetch('http://localhost:3000/notes', {
-                method: "POST",
-                body: JSON.stringify({
-                    title: "Hello! This is a new note",
-                    body: "This is the body of the new note"
-                }),
-                headers: {
-                    "Content-type": "application/json"
+            async function createNewNote() {
+                console.log("Attempting to create a new note");
+                try {
+                    const response = await fetch('http://localhost:3000/notes', {
+                        method: "POST",
+                        body: JSON.stringify({
+                            title: "New Note",
+                            body: "This is the body of the new note"
+                        }),
+                        headers: {
+                            "Content-type": "application/json"
+                        }
+                    });
+                    const data = await response.json();
+                    const newNotesArray = [...notesArray, ...data]
+                    sortNotesArray(newNotesArray);
+                    setSelectedNoteId(data[0].note_id);
+                } catch (error) {
+                    console.error(error);
                 }
-            });
-            console.log(response);
-            const data = await response.json();
-            console.log(data);
-        } catch (error) {
-            console.error(error);
+            }
+            createNewNote();
         }
+    }, [createNoteTrigger]);
+
+    // Sort Property or Method triggers notesArray change
+    useEffect(() => {
+        if (!notesArray) return;
+        const tempNotesArray = [...notesArray];
+        sortNotesArray(tempNotesArray);
+    }, [sortMethod, sortProperty]);
+
+    // selectedNoteIndex resets itself when selectedNoteId changes
+    useEffect(() => {
+        if (!notesArray) return;
+        setIndexFromId();
+    }, [selectedNoteId]);
+
+    // selectedNoteIndex resets itself to match the id when the notesArray gets changed (for when it gets re-sorted)
+    useEffect(() => {
+        if (!notesArray) return;
+        setIndexFromId();
+    }, [notesArray]);
+
+    function sortNotesArray(tempNotesArray) {
+        function compareFunction(a, b) {
+            let result = 0;
+            if (a[sortProperty] < b[sortProperty]) result = -1;
+            else if (a[sortProperty] > b[sortProperty]) result = 1;
+
+            if (sortMethod === "DESC") result *= -1;
+            return result;
+        }
+        const toSet = tempNotesArray.toSorted(compareFunction);
+        setNotesArray(toSet);
+        //setNotesArray(tempNotesArray.toSorted(compareFunction))
+    }
+
+    function setIndexFromId() {
+        const index = notesArray.findIndex((element, index) => {
+            if (element.note_id === selectedNoteId) {
+                return true;
+            }
+            else return false;
+        })
+        setSelectedNoteIndex(index);
     }
 
     function switchNote(indexSelected) {
-        setSelectedNoteIndex(indexSelected);
+        setSelectedNoteId(notesArray[indexSelected].note_id);
     }
 
-    function changeSearchProperty(propertyName) {
-        setSearchProperty(propertyName);
-    }
+    //! RENDERING STARTS HERE
 
-    function changeSortMethod(method) {
-        setSortMethod(method);
-    }
-
-    if (notesArray === undefined) {
+    if (!notesArray || !selectedNoteId || (selectedNoteIndex !== 0 && !selectedNoteIndex)) {
         return (
             <h1>LOADING...</h1>
         );
     }
 
     return (
+        
         <div id='full-screen'>
             <div id='app-container'>
                 <Sidebar 
                     notesArray={notesArray} 
                     selectedNoteIndex={selectedNoteIndex} 
                     switchNote={switchNote}
-                    searchProperty={searchProperty}
-                    changeSearchProperty={changeSearchProperty}
+                    sortNotesArray={sortNotesArray}
+                    sortProperty={sortProperty}
+                    setSortProperty={setSortProperty}
                     sortMethod={sortMethod}
-                    changeSortMethod={changeSortMethod}
-                    createNewNote={createNewNote}
+                    setSortMethod={setSortMethod}
+                    setCreateNoteTrigger={setCreateNoteTrigger}
                 />  
                 <main id='main-section'>
                     <TitleBar selectedNote={notesArray[selectedNoteIndex]}/>

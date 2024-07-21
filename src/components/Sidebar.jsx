@@ -4,33 +4,39 @@ import NoteListItem from './NoteListItem.jsx'
 
 import '../styles/Sidebar.css'
 
-function Sidebar({ notesArray, selectedNotesIndex, switchNote, searchProperty, changeSearchProperty, sortMethod, changeSortMethod, createNewNote }) { 
+function Sidebar({ notesArray, selectedNotesIndex, switchNote, sortNotesArray, sortProperty, setSortProperty, sortMethod, setSortMethod, setCreateNoteTrigger }) { 
 
     const noteListItems = notesArray.map((note, index) => {
         return <NoteListItem key={note.note_id} note={note} switchNote={switchNote} noteIndex={index}/>
     })
 
-    function handleSearchButton() {
-        console.log("Search Button Pressed");
+    function handleSortPropertyButton() {
+        if (sortProperty === "time_modified") {
+            setSortProperty("time_created");
+        } else if (sortProperty === "time_created") {
+            setSortProperty("title");
+        } else {
+            setSortProperty("time_modified");
+        }
+        sortNotesArray(notesArray);
     }
 
-    function handleSortButton() {
-        console.log("Sort button pressed");
-        console.log(sortMethod);
+    function handleSortMethodButton() {
         if (sortMethod === "DESC") {
-            changeSortMethod("ASC");
+            setSortMethod("ASC");
         }
         else {
-            changeSortMethod("DESC");
+            setSortMethod("DESC");
         }
+        sortNotesArray(notesArray);
     }
 
     return (
         <nav id='sidebar'>
             <div className='sidebar-button-bar'>
-                <button id='search-button' onClick={handleSearchButton} className='sidebar-button'>ORDER</button>
-                <button id='sort-button' onClick={handleSortButton} className='sidebar-button'>SORT</button>
-                <button id='create-note-button' onClick={createNewNote} className='sidebar-button'>+</button>
+                <button id='sort-property-button' onClick={handleSortPropertyButton} className='sidebar-button'>PROP</button>
+                <button id='sort-method-button' onClick={handleSortMethodButton} className='sidebar-button'>ORDER</button>
+                <button id='create-note-button' onClick={setCreateNoteTrigger} className='sidebar-button'>+</button>
             </div>
             <div id='note-list-container'>
                 {noteListItems}
