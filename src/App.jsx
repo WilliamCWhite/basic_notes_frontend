@@ -100,7 +100,7 @@ function App() {
     }
 
     function setIndexFromId() {
-        const index = notesArray.findIndex((element, index) => {
+        const index = notesArray.findIndex((element) => {
             if (element.note_id === selectedNoteId) {
                 return true;
             }
@@ -111,6 +111,45 @@ function App() {
 
     function switchNote(indexSelected) {
         setSelectedNoteId(notesArray[indexSelected].note_id);
+    }
+
+    async function deleteNote(note_id) {
+        if (notesArray.length === 1) {
+            alert("You need to have at least 1 note!");
+            return;
+        }
+
+        console.log("called delete note")
+        try {
+            const response = await fetch(`http://localhost:3000/notes/${note_id}`, {
+                method: 'DELETE'
+            })
+            // const data = await response.json();
+            // data[0] is the note object just deleted
+        } catch (error) {
+            console.error(error);
+        }
+
+        if (selectedNoteId === note_id) {
+            selectOtherNote();
+        }
+
+        const indexOfId = notesArray.findIndex((element) => {
+            if (element.note_id === selectedNoteId) {
+                return true;
+            }
+            else return false;
+        })
+        const newNotesArray = notesArray.slice(0, indexOfId).concat(notesArray.slice(indexOfId + 1));
+        setNotesArray(newNotesArray);
+    }
+
+    function selectOtherNote() {
+        if (selectedNoteIndex === notesArray.length - 1) {
+            setSelectedNoteId(notesArray[selectedNoteIndex - 1].note_id);
+        } else {
+            setSelectedNoteId(notesArray[selectedNoteIndex + 1].note_id);
+        }
     }
 
     //! RENDERING STARTS HERE
@@ -135,6 +174,7 @@ function App() {
                     sortMethod={sortMethod}
                     setSortMethod={setSortMethod}
                     setCreateNoteTrigger={setCreateNoteTrigger}
+                    deleteNote={deleteNote}
                 />  
                 <main id='main-section'>
                     <TitleBar selectedNote={notesArray[selectedNoteIndex]}/>

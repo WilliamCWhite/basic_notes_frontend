@@ -4,10 +4,10 @@ import NoteListItem from './NoteListItem.jsx'
 
 import '../styles/Sidebar.css'
 
-function Sidebar({ notesArray, selectedNotesIndex, switchNote, sortNotesArray, sortProperty, setSortProperty, sortMethod, setSortMethod, setCreateNoteTrigger }) { 
+function Sidebar({ notesArray, selectedNotesIndex, switchNote, sortNotesArray, sortProperty, setSortProperty, sortMethod, setSortMethod, setCreateNoteTrigger, deleteNote }) { 
 
     const noteListItems = notesArray.map((note, index) => {
-        return <NoteListItem key={note.note_id} note={note} switchNote={switchNote} noteIndex={index}/>
+        return <NoteListItem key={note.note_id} note={note} switchNote={switchNote} noteIndex={index} deleteNote={deleteNote}/>
     })
 
     function handleSortPropertyButton() {
