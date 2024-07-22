@@ -66,6 +66,42 @@ function App() {
         }
     }, [createNoteTrigger]);
 
+    // TESTING POST
+
+    // PUT
+
+    // DELETE
+    async function deleteNote(note_id) {
+        if (notesArray.length === 1) {
+            alert("You need to have at least 1 note!");
+            return;
+        }
+
+        console.log("called delete note")
+        try {
+            const response = await fetch(`http://localhost:3000/notes/${note_id}`, {
+                method: 'DELETE'
+            })
+            // const data = await response.json();
+            // data[0] is the note object just deleted
+        } catch (error) {
+            console.error(error);
+        }
+
+        if (selectedNoteId === note_id) {
+            selectOtherNote();
+        }
+
+        const indexOfId = notesArray.findIndex((element) => {
+            if (element.note_id === selectedNoteId) {
+                return true;
+            }
+            else return false;
+        })
+        const newNotesArray = notesArray.slice(0, indexOfId).concat(notesArray.slice(indexOfId + 1));
+        setNotesArray(newNotesArray);
+    }
+
     // Sort Property or Method triggers notesArray change
     useEffect(() => {
         if (!notesArray) return;
@@ -111,37 +147,6 @@ function App() {
 
     function switchNote(indexSelected) {
         setSelectedNoteId(notesArray[indexSelected].note_id);
-    }
-
-    async function deleteNote(note_id) {
-        if (notesArray.length === 1) {
-            alert("You need to have at least 1 note!");
-            return;
-        }
-
-        console.log("called delete note")
-        try {
-            const response = await fetch(`http://localhost:3000/notes/${note_id}`, {
-                method: 'DELETE'
-            })
-            // const data = await response.json();
-            // data[0] is the note object just deleted
-        } catch (error) {
-            console.error(error);
-        }
-
-        if (selectedNoteId === note_id) {
-            selectOtherNote();
-        }
-
-        const indexOfId = notesArray.findIndex((element) => {
-            if (element.note_id === selectedNoteId) {
-                return true;
-            }
-            else return false;
-        })
-        const newNotesArray = notesArray.slice(0, indexOfId).concat(notesArray.slice(indexOfId + 1));
-        setNotesArray(newNotesArray);
     }
 
     function selectOtherNote() {
