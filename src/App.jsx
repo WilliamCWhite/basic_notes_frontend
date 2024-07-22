@@ -59,6 +59,26 @@ function App() {
     }
 
     // PUT
+    async function updateNoteInDB(note_id, title, body, time_modified) {
+        console.log(`Attempting to update note with id: ${note_id}`)
+        console.log('Our stringified JSON will look like this:');
+        console.log({title: title, body: body, time_modified: time_modified});
+        try {
+            const response = await fetch(`http://localhost:3000/notes/${note_id}`, {
+                method: "PUT",
+                body: JSON.stringify({
+                    title: title,
+                    body: body,
+                    time_modified: time_modified
+                }),
+                headers: {
+                    "Content-type": "application/json"
+                }
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     // DELETE
     async function deleteNote(note_id) {
@@ -82,12 +102,7 @@ function App() {
             selectOtherNote();
         }
 
-        const indexOfId = notesArray.findIndex((element) => {
-            if (element.note_id === selectedNoteId) {
-                return true;
-            }
-            else return false;
-        })
+        const indexOfId = getIndexFromId(selectedNoteIndex);
         const newNotesArray = notesArray.slice(0, indexOfId).concat(notesArray.slice(indexOfId + 1));
         setNotesArray(newNotesArray);
     }
@@ -125,13 +140,18 @@ function App() {
         //setNotesArray(tempNotesArray.toSorted(compareFunction))
     }
 
-    function setIndexFromId() {
+    function getIndexFromId(note_id) {
         const index = notesArray.findIndex((element) => {
-            if (element.note_id === selectedNoteId) {
+            if (element.note_id === note_id) {
                 return true;
             }
             else return false;
         })
+        return index;
+    }
+
+    function setIndexFromId() {
+        const index = getIndexFromId(selectedNoteId);
         setSelectedNoteIndex(index);
     }
 
@@ -173,7 +193,12 @@ function App() {
                 />  
                 <main id='main-section'>
                     <TitleBar selectedNote={notesArray[selectedNoteIndex]}/>
-                    <NoteContent selectedNote={notesArray[selectedNoteIndex]}/>
+                    <NoteContent 
+                        selectedNoteIndex={selectedNoteIndex} 
+                        updateNoteInDB={updateNoteInDB}
+                        notesArray={notesArray}
+                        sortNotesArray={sortNotesArray}
+                    />
                 </main>
             </div>
         </div>    
