@@ -13,7 +13,6 @@ function App() {
     const [selectedNoteId, setSelectedNoteId] = useState();
     const [sortProperty, setSortProperty] = useState('time_modified');
     const [sortMethod, setSortMethod] = useState('DESC');
-    const [createNoteTrigger, setCreateNoteTrigger] = useState(false);
 
     // GET fetching useEffect
     useEffect(() => {
@@ -36,37 +35,28 @@ function App() {
         return () => { ignore = true }
     }, []);
 
-    // POST fetching useEffect
-    useEffect(() => {
-        if (createNoteTrigger) {
-            setCreateNoteTrigger(false);
-
-            async function createNewNote() {
-                console.log("Attempting to create a new note");
-                try {
-                    const response = await fetch('http://localhost:3000/notes', {
-                        method: "POST",
-                        body: JSON.stringify({
-                            title: "New Note",
-                            body: "This is the body of the new note"
-                        }),
-                        headers: {
-                            "Content-type": "application/json"
-                        }
-                    });
-                    const data = await response.json();
-                    const newNotesArray = [...notesArray, ...data]
-                    sortNotesArray(newNotesArray);
-                    setSelectedNoteId(data[0].note_id);
-                } catch (error) {
-                    console.error(error);
+    // POST function
+    async function createNewNote() {
+        console.log("Attempting to create a new note");
+        try {
+            const response = await fetch('http://localhost:3000/notes', {
+                method: "POST",
+                body: JSON.stringify({
+                    title: "New Note",
+                    body: "This is the body of the new note"
+                }),
+                headers: {
+                    "Content-type": "application/json"
                 }
-            }
-            createNewNote();
+            });
+            const data = await response.json();
+            const newNotesArray = [...notesArray, ...data]
+            sortNotesArray(newNotesArray);
+            setSelectedNoteId(data[0].note_id);
+        } catch (error) {
+            console.error(error);
         }
-    }, [createNoteTrigger]);
-
-    // TESTING POST
+    }
 
     // PUT
 
@@ -178,7 +168,7 @@ function App() {
                     setSortProperty={setSortProperty}
                     sortMethod={sortMethod}
                     setSortMethod={setSortMethod}
-                    setCreateNoteTrigger={setCreateNoteTrigger}
+                    createNewNote={createNewNote}
                     deleteNote={deleteNote}
                 />  
                 <main id='main-section'>
