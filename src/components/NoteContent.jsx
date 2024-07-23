@@ -4,8 +4,6 @@ function NoteContent({ selectedNoteIndex, updateNoteInDB, notesArray, sortNotesA
     const selectedNote = notesArray[selectedNoteIndex];
     const [noteBody, setNoteBody] = useState(selectedNote.body);
 
-    const editorRef = useRef(null);
-
     useEffect(() => {
         const timeoutID = setTimeout(() => {
             if (selectedNote.body !== noteBody) {
@@ -31,7 +29,6 @@ function NoteContent({ selectedNoteIndex, updateNoteInDB, notesArray, sortNotesA
         <div 
             id='note-content' 
             contentEditable='true'
-            ref={editorRef}
             onInput={handleInput}
             suppressContentEditableWarning
         >

@@ -82,6 +82,7 @@ function App() {
 
     // DELETE
     async function deleteNote(note_id) {
+
         if (notesArray.length === 1) {
             alert("You need to have at least 1 note!");
             return;
@@ -102,7 +103,7 @@ function App() {
             selectOtherNote();
         }
 
-        const indexOfId = getIndexFromId(selectedNoteIndex);
+        const indexOfId = getIndexFromId(selectedNoteId);
         const newNotesArray = notesArray.slice(0, indexOfId).concat(notesArray.slice(indexOfId + 1));
         setNotesArray(newNotesArray);
     }
@@ -192,7 +193,12 @@ function App() {
                     deleteNote={deleteNote}
                 />  
                 <main id='main-section'>
-                    <TitleBar selectedNote={notesArray[selectedNoteIndex]}/>
+                    <TitleBar 
+                        selectedNoteIndex={selectedNoteIndex} 
+                        updateNoteInDB={updateNoteInDB}
+                        notesArray={notesArray}
+                        sortNotesArray={sortNotesArray}
+                    />
                     <NoteContent 
                         selectedNoteIndex={selectedNoteIndex} 
                         updateNoteInDB={updateNoteInDB}
