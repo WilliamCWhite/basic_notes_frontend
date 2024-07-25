@@ -17,28 +17,71 @@ function LoginScreen({ userKey, setUserKey, username, setUsername }) {
             console.log("username or password field is empty");
             return
         }
-        
-        const response = await fetch(`https://localhost:3000/users`, {
-            method: 'POST',
-            body: JSON.stringify({
-                username: formUsername,
-                password: formPassword
-            }),
-            headers: {
-                'Content-type': 'application/json'
+        try {
+            const response = await fetch(`http://localhost:3000/users?action=createUser`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    username: formUsername,
+                    password: formPassword
+                }),
+                headers: {
+                    'Content-type': 'application/json'
+                }
+            })
+    
+            if (!response.ok) {
+                console.error("HTTP error, the code wasn't ok");
+                console.log(response.status);
+                return;
             }
-        })
 
-        if (!response.ok) {
-            console.error("HTTP error, the code wasn't ok");
+            const data = await response.json();
+
+            console.log("This is the data we received from the sign up request:");
+            console.log(data); 
+
+            setUsername(data.username);
+            setUserKey(data.user_key);
+
+        } catch (error) {
+            console.error(error);
         }
-
-        
-
     }
 
-    function handleLogIn(event) {
+    async function handleLogIn(event) {
+        if (!formUsername || !formPassword) {
+            console.log("username or password field is empty");
+            return
+        }
+        try {
+            const response = await fetch(`http://localhost:3000/users?action=fetchUser`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    username: formUsername,
+                    password: formPassword
+                }),
+                headers: {
+                    'Content-type': 'application/json'
+                }
+            })
+    
+            if (!response.ok) {
+                console.error("HTTP error, the code wasn't ok");
+                console.log(response.status);
+                return;
+            }
 
+            const data = await response.json();
+
+            console.log("This is the data we received from the log in request:");
+            console.log(data); 
+
+            setUsername(data.username);
+            setUserKey(data.user_key);
+
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     return (

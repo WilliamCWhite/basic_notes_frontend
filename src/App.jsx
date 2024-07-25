@@ -24,7 +24,7 @@ function App() {
 
         async function fetchData() {
             try {
-                const response = await fetch(`http://localhost:3000/notes`);
+                const response = await fetch(`http://localhost:3000/notes/`);
                 const data = await response.json();
                 if (!ignore) {
                     sortNotesArray(data);
