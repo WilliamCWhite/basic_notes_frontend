@@ -4,6 +4,7 @@ import './styles/App.css'
 import Sidebar from './components/Sidebar.jsx'
 import TitleBar from './components/TitleBar.jsx'
 import NoteContent from './components/NoteContent.jsx'
+import LoginScreen from './components/LoginScreen.jsx'
 
 const serverURL = 'http://localhost:3000/'
 
@@ -13,6 +14,9 @@ function App() {
     const [selectedNoteId, setSelectedNoteId] = useState();
     const [sortProperty, setSortProperty] = useState('time_modified');
     const [sortMethod, setSortMethod] = useState('DESC');
+
+    const [userKey, setUserKey] = useState();
+    const [username, setUsername] = useState();
 
     // GET fetching useEffect
     useEffect(() => {
@@ -169,6 +173,17 @@ function App() {
     }
 
     //! RENDERING STARTS HERE
+
+    if (!userKey) {
+        return (
+            <LoginScreen 
+                userKey={userKey}
+                setUserKey={setUserKey}
+                username={username}
+                setUsername={setUsername}
+            />
+        );
+    }
 
     if (!notesArray || !selectedNoteId || (selectedNoteIndex !== 0 && !selectedNoteIndex)) {
         return (
