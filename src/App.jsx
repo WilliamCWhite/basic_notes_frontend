@@ -20,11 +20,22 @@ function App() {
 
     // GET fetching useEffect
     useEffect(() => {
+        if (!userKey) {
+            console.log(userKey)
+            return
+        }
+        console.log(userKey);
+
         let ignore = false;
 
         async function fetchData() {
             try {
-                const response = await fetch(`http://localhost:3000/notes/`);
+                const response = await fetch(`http://localhost:3000/notes/${username}`,  {
+                    method: 'GET',
+                    headers: {
+                        'userAuthenticationKey': userKey
+                    }
+                }); 
                 const data = await response.json();
                 if (!ignore) {
                     sortNotesArray(data);
@@ -37,7 +48,7 @@ function App() {
 
         fetchData();
         return () => { ignore = true }
-    }, []);
+    }, [userKey]);
 
     // POST function
     async function createNewNote() {
