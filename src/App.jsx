@@ -33,7 +33,7 @@ function App() {
                 const response = await fetch(`http://localhost:3000/notes/${username}`,  {
                     method: 'GET',
                     headers: {
-                        'userAuthenticationKey': userKey
+                        'userauthenticationkey': userKey
                     }
                 }); 
                 const data = await response.json();
@@ -54,14 +54,15 @@ function App() {
     async function createNewNote() {
         console.log("Attempting to create a new note");
         try {
-            const response = await fetch('http://localhost:3000/notes', {
+            const response = await fetch(`http://localhost:3000/notes/${username}`, {
                 method: "POST",
                 body: JSON.stringify({
                     title: "New Note",
                     body: "This is the body of the new note"
                 }),
                 headers: {
-                    "Content-type": "application/json"
+                    "Content-type": "application/json",
+                    "userauthenticationkey": userKey
                 }
             });
             const data = await response.json();
@@ -79,7 +80,7 @@ function App() {
         console.log('Our stringified JSON will look like this:');
         console.log({title: title, body: body, time_modified: time_modified});
         try {
-            const response = await fetch(`http://localhost:3000/notes/${note_id}`, {
+            const response = await fetch(`http://localhost:3000/notes/${username}/${note_id}`, {
                 method: "PUT",
                 body: JSON.stringify({
                     title: title,
@@ -87,7 +88,8 @@ function App() {
                     time_modified: time_modified
                 }),
                 headers: {
-                    "Content-type": "application/json"
+                    "Content-type": "application/json",
+                    "userauthenticationkey": userKey
                 }
             });
         } catch (error) {
@@ -105,8 +107,11 @@ function App() {
 
         console.log("called delete note")
         try {
-            const response = await fetch(`http://localhost:3000/notes/${note_id}`, {
-                method: 'DELETE'
+            const response = await fetch(`http://localhost:3000/notes/${username}/${note_id}`, {
+                method: 'DELETE',
+                headers: {
+                    "userauthenticationkey": userKey
+                }
             })
             // const data = await response.json();
             // data[0] is the note object just deleted
