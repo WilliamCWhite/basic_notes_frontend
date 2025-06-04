@@ -1,5 +1,10 @@
 import { useState } from 'react'
 
+import config from '../config.js';
+const serverURL = config.SERVER_URL;
+// const serverURL = "http://localhost:3000/api";
+
+console.log(serverURL);
 function LoginScreen({ userKey, setUserKey, username, setUsername }) {
     const [formUsername, setFormUsername] = useState('');
     const [formPassword, setFormPassword] = useState('');
@@ -18,7 +23,7 @@ function LoginScreen({ userKey, setUserKey, username, setUsername }) {
             return
         }
         try {
-            const response = await fetch(`http://localhost:3000/users?action=createUser`, {
+            const response = await fetch(`${serverURL}/users?action=createUser`, {
                 method: 'POST',
                 body: JSON.stringify({
                     username: formUsername,
@@ -54,7 +59,7 @@ function LoginScreen({ userKey, setUserKey, username, setUsername }) {
             return
         }
         try {
-            const response = await fetch(`http://localhost:3000/users?action=fetchUser`, {
+            const response = await fetch(`${serverURL}/users?action=fetchUser`, {
                 method: 'POST',
                 body: JSON.stringify({
                     username: formUsername,

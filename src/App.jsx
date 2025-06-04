@@ -6,7 +6,9 @@ import TitleBar from './components/TitleBar.jsx'
 import NoteContent from './components/NoteContent.jsx'
 import LoginScreen from './components/LoginScreen.jsx'
 
-const serverURL = 'http://localhost:3000/'
+import config from './config.js';
+const serverURL = config.SERVER_URL;
+// const serverURL = "http://localhost:3000/api";
 
 function App() {
     const [notesArray, setNotesArray] = useState();
@@ -30,7 +32,7 @@ function App() {
 
         async function fetchData() {
             try {
-                const response = await fetch(`http://localhost:3000/notes/${username}`,  {
+                const response = await fetch(`${serverURL}/notes/${username}`,  {
                     method: 'GET',
                     headers: {
                         'userauthenticationkey': userKey
@@ -54,7 +56,7 @@ function App() {
     async function createNewNote() {
         console.log("Attempting to create a new note");
         try {
-            const response = await fetch(`http://localhost:3000/notes/${username}`, {
+            const response = await fetch(`${serverURL}/notes/${username}`, {
                 method: "POST",
                 body: JSON.stringify({
                     title: "New Note",
@@ -80,7 +82,7 @@ function App() {
         console.log('Our stringified JSON will look like this:');
         console.log({title: title, body: body, time_modified: time_modified});
         try {
-            const response = await fetch(`http://localhost:3000/notes/${username}/${note_id}`, {
+            const response = await fetch(`${serverURL}/notes/${username}/${note_id}`, {
                 method: "PUT",
                 body: JSON.stringify({
                     title: title,
@@ -107,7 +109,7 @@ function App() {
 
         console.log("called delete note")
         try {
-            const response = await fetch(`http://localhost:3000/notes/${username}/${note_id}`, {
+            const response = await fetch(`${serverURL}/notes/${username}/${note_id}`, {
                 method: 'DELETE',
                 headers: {
                     "userauthenticationkey": userKey
