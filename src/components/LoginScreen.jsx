@@ -1,8 +1,6 @@
 import { useState } from 'react'
 
-import config from '../config.js';
-const serverURL = config.SERVER_URL;
-// const serverURL = "http://localhost:3000/api";
+const serverURL = import.meta.env.VITE_API_URL;
 
 console.log(serverURL);
 function LoginScreen({ userKey, setUserKey, username, setUsername }) {

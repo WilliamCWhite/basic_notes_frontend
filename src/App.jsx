@@ -6,9 +6,7 @@ import TitleBar from './components/TitleBar.jsx'
 import NoteContent from './components/NoteContent.jsx'
 import LoginScreen from './components/LoginScreen.jsx'
 
-import config from './config.js';
-const serverURL = config.SERVER_URL;
-// const serverURL = "http://localhost:3000/api";
+const serverURL = import.meta.env.VITE_API_URL;
 
 function App() {
     const [notesArray, setNotesArray] = useState();
