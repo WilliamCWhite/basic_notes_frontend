@@ -20,11 +20,17 @@ function TitleBar({ selectedNoteIndex, updateNoteInDB, notesArray, sortNotesArra
         }, 3000);
 
         return (() => clearTimeout(timeoutID));
-    }, [noteTitle])
+    }, [noteTitle]);
+
+    useEffect(() => {
+        setNoteTitle(selectedNote.title);
+    }, [selectedNote]);
 
     function handleInput(event) {
         setNoteTitle(event.target.value);
     }
+
+    console.log(`DEBUG: noteTitle=${noteTitle}, selectedNote.title=${selectedNote.title}`);
 
     return (
         <div id='title-bar'>
@@ -32,7 +38,7 @@ function TitleBar({ selectedNoteIndex, updateNoteInDB, notesArray, sortNotesArra
             <input 
                 type="text" 
                 id="title-input" 
-                value={selectedNote.title} 
+                value={noteTitle} 
                 onChange={handleInput}
             />
         </div>
