@@ -23,17 +23,18 @@ function TitleBar({ selectedNoteIndex, updateNoteInDB, notesArray, sortNotesArra
     }, [noteTitle])
 
     function handleInput(event) {
-        setNoteTitle(event.target.innerHTML)
+        setNoteTitle(event.target.value);
     }
 
     return (
         <div id='title-bar'>
             <button id='display-sidebar-button'></button>
-            <h1
-                contentEditable
-                onInput={handleInput}
-                suppressContentEditableWarning
-            >{selectedNote.title}</h1>
+            <input 
+                type="text" 
+                id="title-input" 
+                value={selectedNote.title} 
+                onChange={handleInput}
+            />
         </div>
     )
 }

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import DOMPurify from 'dompurify'
 
 function NoteContent({ selectedNoteIndex, updateNoteInDB, notesArray, sortNotesArray }) {
     const selectedNote = notesArray[selectedNoteIndex];
@@ -22,8 +23,10 @@ function NoteContent({ selectedNoteIndex, updateNoteInDB, notesArray, sortNotesA
     }, [noteBody])
 
     function handleInput(event) {
-        setNoteBody(event.target.innerHTML);
+        setNoteBody(event.target.innerHTML); 
     }
+
+    const sanitizedHTML = DOMPurify.sanitize(selectedNote.body);
 
     return (
         <div 
@@ -31,10 +34,10 @@ function NoteContent({ selectedNoteIndex, updateNoteInDB, notesArray, sortNotesA
             contentEditable='true'
             onInput={handleInput}
             suppressContentEditableWarning
+            dangerouslySetInnerHTML={{__html: sanitizedHTML}}
         >
-            {selectedNote.body}
         </div>
-    )
+    ) 
 }
 
 export default NoteContent;
