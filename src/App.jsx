@@ -54,11 +54,14 @@ function App() {
     async function createNewNote() {
         console.log("Attempting to create a new note");
         try {
+            const currentTime = new Date(Date.now()).toISOString();
             const response = await fetch(`${serverURL}/notes/${username}`, {
                 method: "POST",
                 body: JSON.stringify({
                     title: "New Note",
-                    body: "This is the body of the new note"
+                    body: "This is the body of the new note",
+                    time_modified: currentTime,
+                    time_created: currentTime
                 }),
                 headers: {
                     "Content-type": "application/json",

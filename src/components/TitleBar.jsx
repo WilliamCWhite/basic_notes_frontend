@@ -30,8 +30,6 @@ function TitleBar({ selectedNoteIndex, updateNoteInDB, notesArray, sortNotesArra
         setNoteTitle(event.target.value);
     }
 
-    console.log(`DEBUG: noteTitle=${noteTitle}, selectedNote.title=${selectedNote.title}`);
-
     return (
         <div id='title-bar'>
             <button id='display-sidebar-button'></button>
