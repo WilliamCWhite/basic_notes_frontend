@@ -22,13 +22,28 @@ function NoteContent({ selectedNoteIndex, updateNoteInDB, notesArray, sortNotesA
         return (() => clearTimeout(timeoutID));
     }, [noteBody])
 
+    useEffect(() => {
+        setNoteBody(selectedNote.body);
+    }, [selectedNote]);
+
     function handleInput(event) {
-        setNoteBody(event.target.innerHTML); 
+        setNoteBody(event.target.value); 
     }
 
-    const sanitizedHTML = DOMPurify.sanitize(selectedNote.body);
+    // const sanitizedHTML = DOMPurify.sanitize(selectedNote.body);
+
 
     return (
+        <textarea
+            id="note-content-input"
+            value={noteBody}
+            onChange={handleInput}
+        />
+    ) 
+}
+
+export default NoteContent;
+/*
         <div 
             id='note-content' 
             contentEditable='true'
@@ -37,7 +52,4 @@ function NoteContent({ selectedNoteIndex, updateNoteInDB, notesArray, sortNotesA
             dangerouslySetInnerHTML={{__html: sanitizedHTML}}
         >
         </div>
-    ) 
-}
-
-export default NoteContent;
+*/
