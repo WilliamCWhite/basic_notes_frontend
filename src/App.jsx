@@ -95,6 +95,7 @@ function App() {
                     "userauthenticationkey": userKey
                 }
             });
+            await response.json();
         } catch (error) {
             console.error(error);
         }
@@ -180,6 +181,10 @@ function App() {
     }
 
     function switchNote(indexSelected) {
+        // SAMPLE CODE FOR SAVING WHEN SWITCHING, NOTE I HAVE TO USE REFS
+        // const selectedNote = notesArray[selectedNoteIndex];
+        // const currentTime = new Date(Date.now()).toISOString();
+        // updateNoteInDB(selectedNoteId, selectedNote.title, selectedNote.body, currentTime);
         setSelectedNoteId(notesArray[indexSelected].note_id);
     }
 
