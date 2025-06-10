@@ -1,0 +1,8 @@
+#note-content-container {
+    flex-grow: 1;
+}
+#note-content-input {
+    width: 100%;
+    height: 100%;
+    resize: none;
+}

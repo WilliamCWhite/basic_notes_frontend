@@ -2,7 +2,7 @@ import { useState, useEffect, forwardRef, useImperativeHandle } from 'react'
 
 import '../styles/TitleBar.css'
 
-function TitleBar({ selectedNoteId, selectedNoteTitle, updateNoteTitleInDB }, noteTitleRef) {
+function TitleBar({ selectedNoteId, selectedNoteTitle, updateNoteTitleInDB, deleteNote, toggleSidebar }, noteTitleRef) {
     const [noteTitle, setNoteTitle] = useState(selectedNoteTitle);
 
     useImperativeHandle(noteTitleRef, () => ({
@@ -35,13 +35,24 @@ function TitleBar({ selectedNoteId, selectedNoteTitle, updateNoteTitleInDB }, no
 
     return (
         <div id='title-bar'>
-            <button id='display-sidebar-button'></button>
-            <input 
-                type="text" 
-                id="title-input" 
-                value={noteTitle} 
-                onChange={handleInput}
-            />
+            <div className="left-align">
+                <button 
+                    id='display-sidebar-button'
+                    onClick={() => toggleSidebar()}
+                >Toggle</button>
+                <input 
+                    type="text" 
+                    id="title-input" 
+                    value={noteTitle} 
+                    onChange={handleInput}
+                />
+            </div>
+            <div className="right-align">
+                <button 
+                    id='delete-note-button' 
+                    onClick={() => deleteNote(selectedNoteId)}
+                >Delete</button>
+            </div>
         </div>
     )
 }

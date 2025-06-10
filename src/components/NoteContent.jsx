@@ -1,5 +1,7 @@
 import { useState, useEffect, forwardRef, useImperativeHandle } from 'react'
 
+import '../styles/NoteContent.css'
+
 function NoteContent({ selectedNoteId, selectedNoteBody, updateNoteBodyInDB }, noteContentRef) {
     const [noteBody, setNoteBody] = useState(selectedNoteBody);
 
@@ -32,11 +34,13 @@ function NoteContent({ selectedNoteId, selectedNoteBody, updateNoteBodyInDB }, n
     }
 
     return (
-        <textarea
-            id="note-content-input"
-            value={noteBody}
-            onChange={handleInput}
-        />
+        <div id="note-content-container">
+            <textarea
+                id="note-content-input"
+                value={noteBody}
+                onChange={handleInput}
+            />
+        </div>
     ) 
 }
 

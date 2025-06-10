@@ -15,6 +15,8 @@ function App() {
     const [sortProperty, setSortProperty] = useState('time_modified');
     const [sortMethod, setSortMethod] = useState('DESC');
 
+    const [isSidebarShown, setIsSidebarShown] = useState(true);
+
     const [userKey, setUserKey] = useState();
     const [username, setUsername] = useState();
 
@@ -35,7 +37,7 @@ function App() {
             const data = await getUserNotes(username, userKey);
             console.log(data);
             setNotesArray(data);
-            setSelectedNoteId(data[0].note_id);
+            setSelectedNoteId(data?.[0]?.note_id);
         };
         fetchData();
     }, [userKey]);
@@ -86,15 +88,10 @@ function App() {
     // WARN: Seems like there's some error where a note will delete but it's put request will still occur
     // very hard to replicate though
     async function deleteNote(noteId) {
-
-        // if (notesArray.length === 1) {
-            // alert("You need to have at least 1 note!");
-            // return;
-        // }
-
         console.log("called delete note")
         deleteNoteRequest(username, userKey, noteId);
 
+        // handle moving to 0 notes
         if (notesArray.length === 1) {
             setNotesArray([]);
             setSelectedNoteId(undefined);
@@ -160,6 +157,16 @@ function App() {
 
         setSelectedNoteId(newNoteId);
     }
+    
+    function toggleSidebar() {
+        console.log("toggling sidebar");
+        if (isSidebarShown) {
+            setIsSidebarShown(false);
+        }
+        else {
+            setIsSidebarShown(true);
+        }
+    }
 
     //! RENDERING STARTS HERE
     let appContainerContent;
@@ -189,23 +196,26 @@ function App() {
     } else {
         appContainerContent = (
             <>
-                <Sidebar 
-                    notesArray={notesArray} 
-                    selectedNoteId={selectedNoteId}
-                    switchNote={switchNote}
-                    sortProperty={sortProperty}
-                    setSortProperty={setSortProperty}
-                    sortMethod={sortMethod}
-                    setSortMethod={setSortMethod}
-                    createNewNote={createNewNote}
-                    deleteNote={deleteNote}
-                />  
+                {isSidebarShown &&
+                    <Sidebar 
+                        notesArray={notesArray} 
+                        selectedNoteId={selectedNoteId}
+                        switchNote={switchNote}
+                        sortProperty={sortProperty}
+                        setSortProperty={setSortProperty}
+                        sortMethod={sortMethod}
+                        setSortMethod={setSortMethod}
+                        createNewNote={createNewNote}
+                    />  
+                }
                 <main id='main-section'>
                     <TitleBar 
                         ref={noteTitleRef}
                         selectedNoteId={selectedNoteId}
                         selectedNoteTitle={getSelectedNote().title}
                         updateNoteTitleInDB={updateNoteTitleInDB}
+                        deleteNote={deleteNote}
+                        toggleSidebar={toggleSidebar}
                     />
                     <NoteContent 
                         ref={noteContentRef}
