@@ -27,7 +27,6 @@ function App() {
         console.log(userKey);
 
         const fetchData = async () => {
-            console.log("running get logic");
             const data = await getUserNotes(username, userKey);
             console.log(data);
             sortNotesArray(data);
@@ -69,7 +68,6 @@ function App() {
 
         // ensure a deleted note is never selected
         if (selectedNoteId === noteId) {
-            console.log("deleted the selectednote, must change shit")
             selectLastModifiedNote(newNotesArray); // since notesArray isn't updated yet
 
         }
@@ -116,7 +114,6 @@ function App() {
                 mostRecentId = newNotesArray[i].note_id;
             }
         }
-        console.log(`in selectLastModifiedNote, setting the selectedNoteId to ${mostRecentId}`);
 
         setSelectedNoteId(mostRecentId);
     }
@@ -161,7 +158,6 @@ function App() {
             <h1>LOADING...</h1>
         );
     }
-    console.log(`App.jsx re-render, selectedNoteId=${selectedNoteId}`);
 
     return (
         

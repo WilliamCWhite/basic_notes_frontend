@@ -14,7 +14,6 @@ function NoteContent({ selectedNoteBody, updateNoteBodyInDB }) {
         return (() => clearTimeout(timeoutID));
     }, [noteBody])
 
-    // NOTE: I'm just note sure this is necessary anymore
     useEffect(() => {
         setNoteBody(selectedNoteBody);
     }, [selectedNoteBody]);
@@ -32,7 +31,4 @@ function NoteContent({ selectedNoteBody, updateNoteBodyInDB }) {
     ) 
 }
 
-// only re-render if the selectedNoteId changes, or if index changes
-export default memo(NoteContent, (prevProps,nextProps) => {
-    return prevProps.selectedNoteBody === nextProps.selectedNoteBody;
-});
+export default NoteContent

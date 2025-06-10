@@ -21,6 +21,7 @@ function Sidebar({ notesArray, selectedNoteId, setSelectedNoteId, sortNotesArray
             else if (a[sortProperty] > b[sortProperty]) result = 1;
 
             if (sortMethod === "DESC") result *= -1;
+            if (sortProperty === "title") result *= -1;
             return result;
         }
         return tempNotesArray.toSorted(compareFunction);

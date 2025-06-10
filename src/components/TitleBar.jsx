@@ -16,7 +16,6 @@ function TitleBar({ selectedNoteTitle, updateNoteTitleInDB }) {
         return (() => clearTimeout(timeoutID));
     }, [noteTitle]);
 
-    // NOTE: not sure if this is necessary
     useEffect(() => {
         setNoteTitle(selectedNoteTitle);
     }, [selectedNoteTitle]);
