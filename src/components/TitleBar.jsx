@@ -2,7 +2,7 @@ import { useState, useEffect, forwardRef, useImperativeHandle } from 'react'
 
 import '../styles/TitleBar.css'
 
-function TitleBar({ selectedNoteTitle, updateNoteTitleInDB }, noteTitleRef) {
+function TitleBar({ selectedNoteId, selectedNoteTitle, updateNoteTitleInDB }, noteTitleRef) {
     const [noteTitle, setNoteTitle] = useState(selectedNoteTitle);
 
     useImperativeHandle(noteTitleRef, () => ({
@@ -27,7 +27,7 @@ function TitleBar({ selectedNoteTitle, updateNoteTitleInDB }, noteTitleRef) {
 
     useEffect(() => {
         setNoteTitle(selectedNoteTitle);
-    }, [selectedNoteTitle]);
+    }, [selectedNoteTitle, selectedNoteId]);
 
     function handleInput(event) {
         setNoteTitle(event.target.value);

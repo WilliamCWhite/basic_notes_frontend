@@ -20,6 +20,8 @@ function App() {
 
     const noteTitleRef = useRef();
     const noteContentRef = useRef();
+
+    const [followUpSwitch, setFollowUpSwitch] = useState(false);
     
     // GET fetching useEffect
     useEffect(() => {
@@ -44,12 +46,26 @@ function App() {
         const data = await postNewNote(username, userKey); //await cuz need note_id
         const newNotesArray = [...notesArray, ...data];
         setNotesArray(newNotesArray);
-        switchNote(data[0].note_id);
+        console.log("set notes array called")
+        setFollowUpSwitch(data[0].note_id);
     }
+
+    useEffect(() => {
+        if (followUpSwitch !== false) {
+            console.log("Noticed follow up switch");
+            console.log(`notesArray: ${notesArray}`);
+            console.log(`selectedNoteId(Pre): ${selectedNoteId}`);
+            const equivalent = followUpSwitch
+            switchNote(equivalent);
+            console.log(`selectedNotesId(Post): ${selectedNoteId}`);
+            setFollowUpSwitch(false);
+        }
+    }, [followUpSwitch]);
 
     // PUT
     async function updateNoteInDB(noteId, title, body) {
         const timeModified = new Date(Date.now()).toISOString();
+        console.log(`updating note in db, id=${noteId}, title=${title}, body=${body}`);
         putUpdatedNote(username, userKey, noteId, title, body, timeModified);
 
         const tempNotesArray = [...notesArray];
@@ -83,9 +99,7 @@ function App() {
     }
 
     function getSelectedNote() {
-        console.log(`call to getSelectedNote, id=${selectedNoteId}`);
         const note = notesArray.find(note => note.note_id === selectedNoteId); 
-        console.log(note);
         return note;
     }
 
@@ -171,12 +185,14 @@ function App() {
                 <main id='main-section'>
                     <TitleBar 
                         ref={noteTitleRef}
-                        selectedNoteTitle={getSelectedNote(selectedNoteId).title}
+                        selectedNoteId={selectedNoteId}
+                        selectedNoteTitle={getSelectedNote().title}
                         updateNoteTitleInDB={updateNoteTitleInDB}
                     />
                     <NoteContent 
                         ref={noteContentRef}
-                        selectedNoteBody={getSelectedNote(selectedNoteId).body}
+                        selectedNoteId={selectedNoteId}
+                        selectedNoteBody={getSelectedNote().body}
                         updateNoteBodyInDB={updateNoteBodyInDB}
                     />
                 </main>

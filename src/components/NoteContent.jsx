@@ -1,6 +1,6 @@
 import { useState, useEffect, forwardRef, useImperativeHandle } from 'react'
 
-function NoteContent({ selectedNoteBody, updateNoteBodyInDB }, noteContentRef) {
+function NoteContent({ selectedNoteId, selectedNoteBody, updateNoteBodyInDB }, noteContentRef) {
     const [noteBody, setNoteBody] = useState(selectedNoteBody);
 
     useImperativeHandle(noteContentRef, () => ({
@@ -25,7 +25,7 @@ function NoteContent({ selectedNoteBody, updateNoteBodyInDB }, noteContentRef) {
 
     useEffect(() => {
         setNoteBody(selectedNoteBody);
-    }, [selectedNoteBody]);
+    }, [selectedNoteBody, selectedNoteId]); //important to keep id
 
     function handleInput(event) {
         setNoteBody(event.target.value); 

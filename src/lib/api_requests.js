@@ -17,7 +17,8 @@ export async function getUserNotes(username, userKey) {
 
 export async function postNewNote(username, userKey) {
     try {
-        const currentTime = new Date(Date.now()).toISOString();
+        // HACK: creates new note before autosaving, so add 50ms so newest note is last_modified
+        const currentTime = new Date(Date.now() + 50).toISOString();
         const response = await fetch(`${serverURL}/notes/${username}`, {
             method: "POST",
             body: JSON.stringify({
