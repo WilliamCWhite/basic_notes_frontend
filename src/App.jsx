@@ -45,11 +45,17 @@ function App() {
         console.log("Attempting to create new note");
         const data = await postNewNote(username, userKey); //await cuz need note_id
         const newNotesArray = [...notesArray, ...data];
+        if (notesArray === undefined || notesArray.length === 0) {
+            setNotesArray(newNotesArray);
+            setSelectedNoteId(data[0].note_id);
+            return;
+        }
         setNotesArray(newNotesArray);
         console.log("set notes array called")
         setFollowUpSwitch(data[0].note_id);
     }
 
+    // prevents selectedNoteId changing to a newly posted note not seen in notesArray yet
     useEffect(() => {
         if (followUpSwitch !== false) {
             console.log("Noticed follow up switch");
@@ -77,15 +83,23 @@ function App() {
     }
 
     // DELETE
+    // WARN: Seems like there's some error where a note will delete but it's put request will still occur
+    // very hard to replicate though
     async function deleteNote(noteId) {
 
-        if (notesArray.length === 1) {
-            alert("You need to have at least 1 note!");
-            return;
-        }
+        // if (notesArray.length === 1) {
+            // alert("You need to have at least 1 note!");
+            // return;
+        // }
 
         console.log("called delete note")
         deleteNoteRequest(username, userKey, noteId);
+
+        if (notesArray.length === 1) {
+            setNotesArray([]);
+            setSelectedNoteId(undefined);
+            return;
+        }
 
         const indexOfId = notesArray.findIndex(note => note.note_id === noteId);
         const newNotesArray = notesArray.slice(0, indexOfId).concat(notesArray.slice(indexOfId + 1));
@@ -94,7 +108,6 @@ function App() {
         // ensure a deleted note is never selected
         if (selectedNoteId === noteId) {
             selectLastModifiedNote(newNotesArray); // since notesArray isn't updated yet
-
         }
     }
 
@@ -149,9 +162,10 @@ function App() {
     }
 
     //! RENDERING STARTS HERE
+    let appContainerContent;
 
     if (!userKey) {
-        return (
+        appContainerContent = (
             <LoginScreen 
                 userKey={userKey}
                 setUserKey={setUserKey}
@@ -159,18 +173,22 @@ function App() {
                 setUsername={setUsername}
             />
         );
-    }
-
-    if (!notesArray || !selectedNoteId) {
-        return (
-            <h1>LOADING...</h1>
+    } else if (notesArray === undefined) {
+        appContainerContent = (
+            <div>
+                <h1>Loading...</h1>
+            </div>
         );
-    }
-
-    return (
-        
-        <div id='full-screen'>
-            <div id='app-container'>
+    } else if (!notesArray || !selectedNoteId) {
+        appContainerContent = (
+            <div>
+                <h1>no notes yet</h1>
+                <button onClick={createNewNote}>Create New Note!</button>
+            </div>
+        );
+    } else {
+        appContainerContent = (
+            <>
                 <Sidebar 
                     notesArray={notesArray} 
                     selectedNoteId={selectedNoteId}
@@ -196,6 +214,15 @@ function App() {
                         updateNoteBodyInDB={updateNoteBodyInDB}
                     />
                 </main>
+            </>
+        );
+    }
+
+    return (
+        
+        <div id='full-screen'>
+            <div id='app-container'>
+                {appContainerContent}
             </div>
         </div>    
     )
