@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef } from 'react'
-import DOMPurify from 'dompurify'
+import { useState, useEffect, useRef, memo } from 'react'
 
-function NoteContent({ selectedNoteIndex, updateNoteInDB, notesArray, sortNotesArray }) {
+function NoteContent({ selectedNoteIndex, updateNoteInDB, notesArray, sortNotesArray, selectedNoteId }) {
     const selectedNote = notesArray[selectedNoteIndex];
     const [noteBody, setNoteBody] = useState(selectedNote.body);
+    console.log(`Note content re-render, selectedNoteId=${selectedNoteId}`)
 
     useEffect(() => {
         const timeoutID = setTimeout(() => {
@@ -42,14 +42,12 @@ function NoteContent({ selectedNoteIndex, updateNoteInDB, notesArray, sortNotesA
     ) 
 }
 
-export default NoteContent;
-/*
-        <div 
-            id='note-content' 
-            contentEditable='true'
-            onInput={handleInput}
-            suppressContentEditableWarning
-            dangerouslySetInnerHTML={{__html: sanitizedHTML}}
-        >
-        </div>
-*/
+// export default NoteContent;
+
+// only re-render if the selectedNoteId changes, or if index changes
+export default memo(NoteContent, (prevProps,nextProps) => {
+    return (
+        prevProps.selectedNoteId === nextProps.selectedNoteId &&
+        prevProps.selectedNoteIndex === nextProps.selectedNoteIndex
+    );
+});

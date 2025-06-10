@@ -6,6 +6,8 @@ import TitleBar from './components/TitleBar.jsx'
 import NoteContent from './components/NoteContent.jsx'
 import LoginScreen from './components/LoginScreen.jsx'
 
+import { getUserNotes, postNewNote, putUpdatedNote, deleteNoteRequest } from './lib/api_requests.js'
+
 const serverURL = import.meta.env.VITE_API_URL;
 
 function App() {
@@ -26,82 +28,33 @@ function App() {
         }
         console.log(userKey);
 
-        let ignore = false;
-
-        async function fetchData() {
-            try {
-                const response = await fetch(`${serverURL}/notes/${username}`,  {
-                    method: 'GET',
-                    headers: {
-                        'userauthenticationkey': userKey
-                    }
-                }); 
-                const data = await response.json();
-                if (!ignore) {
-                    sortNotesArray(data);
-                    setSelectedNoteId(data[0].note_id);
-                }
-            } catch (error) {
-                console.error(error);
-            }
-        }
-
+        const fetchData = async () => {
+            console.log("running get logic");
+            const data = await getUserNotes(username, userKey);
+            console.log(data);
+            sortNotesArray(data);
+            setSelectedNoteId(data[0].note_id);
+        };
         fetchData();
-        return () => { ignore = true }
     }, [userKey]);
 
     // POST function
     async function createNewNote() {
-        console.log("Attempting to create a new note");
-        try {
-            const currentTime = new Date(Date.now()).toISOString();
-            const response = await fetch(`${serverURL}/notes/${username}`, {
-                method: "POST",
-                body: JSON.stringify({
-                    title: "New Note",
-                    body: "This is the body of the new note",
-                    time_modified: currentTime,
-                    time_created: currentTime
-                }),
-                headers: {
-                    "Content-type": "application/json",
-                    "userauthenticationkey": userKey
-                }
-            });
-            const data = await response.json();
-            const newNotesArray = [...notesArray, ...data]
-            sortNotesArray(newNotesArray);
-            setSelectedNoteId(data[0].note_id);
-        } catch (error) {
-            console.error(error);
-        }
+        console.log("Attempting to create new note");
+        const data = await postNewNote(username, userKey); //await cuz need note_id
+        const newNotesArray = [...notesArray, ...data];
+        sortNotesArray(newNotesArray);
+        setSelectedNoteId(data[0].note_id);
     }
 
     // PUT
+    //WARN: probably need to move notesArray update logic from noteContent to here
     async function updateNoteInDB(note_id, title, body, time_modified) {
-        console.log(`Attempting to update note with id: ${note_id}`)
-        console.log('Our stringified JSON will look like this:');
-        console.log({title: title, body: body, time_modified: time_modified});
-        try {
-            const response = await fetch(`${serverURL}/notes/${username}/${note_id}`, {
-                method: "PUT",
-                body: JSON.stringify({
-                    title: title,
-                    body: body,
-                    time_modified: time_modified
-                }),
-                headers: {
-                    "Content-type": "application/json",
-                    "userauthenticationkey": userKey
-                }
-            });
-            await response.json();
-        } catch (error) {
-            console.error(error);
-        }
+        putUpdatedNote(username, userKey, note_id, title, body, time_modified);
     }
 
     // DELETE
+    // FIX: Right now deleting current note breaks it
     async function deleteNote(note_id) {
 
         if (notesArray.length === 1) {
@@ -110,18 +63,7 @@ function App() {
         }
 
         console.log("called delete note")
-        try {
-            const response = await fetch(`${serverURL}/notes/${username}/${note_id}`, {
-                method: 'DELETE',
-                headers: {
-                    "userauthenticationkey": userKey
-                }
-            })
-            // const data = await response.json();
-            // data[0] is the note object just deleted
-        } catch (error) {
-            console.error(error);
-        }
+        deleteNoteRequest(username, userKey, note_id);
 
         if (selectedNoteId === note_id) {
             selectOtherNote();
@@ -214,6 +156,7 @@ function App() {
             <h1>LOADING...</h1>
         );
     }
+    console.log(`App.jsx re-render, selectedNoteId=${selectedNoteId}`);
 
     return (
         
@@ -243,6 +186,7 @@ function App() {
                         updateNoteInDB={updateNoteInDB}
                         notesArray={notesArray}
                         sortNotesArray={sortNotesArray}
+                        selectedNoteId={selectedNoteId}
                     />
                 </main>
             </div>
