@@ -4,7 +4,7 @@ import NoteListItem from './NoteListItem.jsx'
 
 import '../styles/Sidebar.css'
 
-function Sidebar({ notesArray, selectedNoteId, setSelectedNoteId, sortNotesArray, sortProperty, setSortProperty, sortMethod, setSortMethod, createNewNote, deleteNote }) { 
+function Sidebar({ notesArray, selectedNoteId, switchNote, sortNotesArray, sortProperty, setSortProperty, sortMethod, setSortMethod, createNewNote, deleteNote }) { 
 
     const [sortedNotesArray, setSortedNotesArray] = useState([]);
 
@@ -41,7 +41,7 @@ function Sidebar({ notesArray, selectedNoteId, setSelectedNoteId, sortNotesArray
             <NoteListItem 
                 key={note.note_id} 
                 note={note} 
-                setSelectedNoteId={setSelectedNoteId} 
+                switchNote={switchNote} 
                 deleteNote={deleteNote}
                 isSelected={isSelected}
             />

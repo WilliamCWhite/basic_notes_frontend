@@ -1,9 +1,18 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, forwardRef, useImperativeHandle } from 'react'
 
 import '../styles/TitleBar.css'
 
-function TitleBar({ selectedNoteTitle, updateNoteTitleInDB }) {
+function TitleBar({ selectedNoteTitle, updateNoteTitleInDB }, noteTitleRef) {
     const [noteTitle, setNoteTitle] = useState(selectedNoteTitle);
+
+    useImperativeHandle(noteTitleRef, () => ({
+        getNoteTitle: () => {
+            if (selectedNoteTitle === noteTitle) {
+                return null;
+            }
+            return noteTitle;
+        },
+    }));
 
     useEffect(() => {
         const timeoutID = setTimeout(() => {
@@ -37,4 +46,4 @@ function TitleBar({ selectedNoteTitle, updateNoteTitleInDB }) {
     )
 }
 
-export default TitleBar
+export default forwardRef(TitleBar);

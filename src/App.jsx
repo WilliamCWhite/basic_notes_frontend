@@ -17,6 +17,9 @@ function App() {
 
     const [userKey, setUserKey] = useState();
     const [username, setUsername] = useState();
+
+    const noteTitleRef = useRef();
+    const noteContentRef = useRef();
     
     // GET fetching useEffect
     useEffect(() => {
@@ -29,7 +32,7 @@ function App() {
         const fetchData = async () => {
             const data = await getUserNotes(username, userKey);
             console.log(data);
-            sortNotesArray(data);
+            setNotesArray(data);
             setSelectedNoteId(data[0].note_id);
         };
         fetchData();
@@ -40,18 +43,24 @@ function App() {
         console.log("Attempting to create new note");
         const data = await postNewNote(username, userKey); //await cuz need note_id
         const newNotesArray = [...notesArray, ...data];
-        sortNotesArray(newNotesArray);
-        setSelectedNoteId(data[0].note_id);
+        setNotesArray(newNotesArray);
+        switchNote(data[0].note_id);
     }
 
     // PUT
-    //WARN: probably need to move notesArray update logic from noteContent to here
-    async function updateNoteInDB(noteId, title, body, timeModified) {
+    async function updateNoteInDB(noteId, title, body) {
+        const timeModified = new Date(Date.now()).toISOString();
         putUpdatedNote(username, userKey, noteId, title, body, timeModified);
+
+        const tempNotesArray = [...notesArray];
+        const selectedNoteIndex = getSelectedNoteIndex();
+        tempNotesArray[selectedNoteIndex].title = title;
+        tempNotesArray[selectedNoteIndex].body = body;
+        tempNotesArray[selectedNoteIndex].time_modified = timeModified;
+        setNotesArray(tempNotesArray);
     }
 
     // DELETE
-    // FIX: Right now deleting current note breaks it
     async function deleteNote(noteId) {
 
         if (notesArray.length === 1) {
@@ -74,35 +83,16 @@ function App() {
     }
 
     function getSelectedNote() {
-        return notesArray.find(note => note.note_id === selectedNoteId);
+        console.log(`call to getSelectedNote, id=${selectedNoteId}`);
+        const note = notesArray.find(note => note.note_id === selectedNoteId); 
+        console.log(note);
+        return note;
     }
 
     function getSelectedNoteIndex() {
         return notesArray.findIndex(note => note.note_id === selectedNoteId);
     }
 
-    function sortNotesArray(tempNotesArray) {
-        function compareFunction(a, b) {
-            let result = 0;
-            if (a[sortProperty] < b[sortProperty]) result = -1;
-            else if (a[sortProperty] > b[sortProperty]) result = 1;
-
-            if (sortMethod === "DESC") result *= -1;
-            return result;
-        }
-        const toSet = tempNotesArray.toSorted(compareFunction);
-        setNotesArray(toSet);
-        //setNotesArray(tempNotesArray.toSorted(compareFunction))
-    }
-
-    // function switchNote(indexSelected) {
-    //     // SAMPLE CODE FOR SAVING WHEN SWITCHING, NOTE I HAVE TO USE REFS
-    //     // const selectedNote = notesArray[selectedNoteIndex];
-    //     // const currentTime = new Date(Date.now()).toISOString();
-    //     // updateNoteInDB(selectedNoteId, selectedNote.title, selectedNote.body, currentTime);
-    //     setSelectedNoteId(notesArray[indexSelected].note_id);
-    // }
-    //
     function selectLastModifiedNote(newNotesArray) {
         let mostRecentTime = new Date(newNotesArray[0].time_modified);
         let mostRecentId = newNotesArray[0].note_id;
@@ -119,25 +109,29 @@ function App() {
     }
 
     function updateNoteBodyInDB(body) {
-        const timeModified = new Date(Date.now()).toISOString();
-        updateNoteInDB(selectedNoteId, getSelectedNote(selectedNoteId).title, body, timeModified);
-
-        const tempNotesArray = [...notesArray];
-        const selectedNoteIndex = getSelectedNoteIndex()
-        tempNotesArray[selectedNoteIndex].body = body;
-        tempNotesArray[selectedNoteIndex].time_modified = timeModified;
-        setNotesArray(tempNotesArray);
+        updateNoteInDB(selectedNoteId, getSelectedNote(selectedNoteId).title, body);
     }
 
     function updateNoteTitleInDB(title) {
-        const timeModified = new Date(Date.now()).toISOString();
-        updateNoteInDB(selectedNoteId, title, getSelectedNote(selectedNoteId).body, timeModified);
+        updateNoteInDB(selectedNoteId, title, getSelectedNote(selectedNoteId).body);
+    }
 
-        const tempNotesArray = [...notesArray];
-        const selectedNoteIndex = getSelectedNoteIndex()
-        tempNotesArray[selectedNoteIndex].title = title;
-        tempNotesArray[selectedNoteIndex].time_modified = timeModified;
-        setNotesArray(tempNotesArray);
+    function switchNote(newNoteId) {
+        const autosaveTitle = noteTitleRef.current.getNoteTitle();
+        const autosaveBody = noteContentRef.current.getNoteBody();
+
+        // Only update if necessary, prevents many unnecessary put requests
+        if (autosaveTitle !== null && autosaveBody !== null) {
+            updateNoteInDB(selectedNoteId, autosaveTitle, autosaveBody);
+        } 
+        else if (autosaveTitle !== null && autosaveBody === null) {
+            updateNoteTitleInDB(autosaveTitle);
+        } 
+        else if (autosaveTitle === null && autosaveBody !== null) {
+            updateNoteBodyInDB(autosaveBody);
+        }
+
+        setSelectedNoteId(newNoteId);
     }
 
     //! RENDERING STARTS HERE
@@ -166,7 +160,7 @@ function App() {
                 <Sidebar 
                     notesArray={notesArray} 
                     selectedNoteId={selectedNoteId}
-                    setSelectedNoteId={setSelectedNoteId}
+                    switchNote={switchNote}
                     sortProperty={sortProperty}
                     setSortProperty={setSortProperty}
                     sortMethod={sortMethod}
@@ -176,10 +170,12 @@ function App() {
                 />  
                 <main id='main-section'>
                     <TitleBar 
+                        ref={noteTitleRef}
                         selectedNoteTitle={getSelectedNote(selectedNoteId).title}
                         updateNoteTitleInDB={updateNoteTitleInDB}
                     />
                     <NoteContent 
+                        ref={noteContentRef}
                         selectedNoteBody={getSelectedNote(selectedNoteId).body}
                         updateNoteBodyInDB={updateNoteBodyInDB}
                     />

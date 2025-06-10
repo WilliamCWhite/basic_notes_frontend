@@ -1,7 +1,7 @@
 
 import '../styles/NoteListItem.css'
 
-function NoteListItem({ note, setSelectedNoteId, noteIndex, deleteNote, isSelected }) {
+function NoteListItem({ note, switchNote, noteIndex, deleteNote, isSelected }) {
     let classes = "note-list-item";
     if (isSelected) {
         classes = "note-list-item selected-note-list-item"
@@ -9,7 +9,7 @@ function NoteListItem({ note, setSelectedNoteId, noteIndex, deleteNote, isSelect
 
     return (
         <div className={classes}>
-            <h3 onClick={() => { setSelectedNoteId(note.note_id) }}>{note.title}</h3>
+            <h3 onClick={() => { switchNote(note.note_id) }}>{note.title}</h3>
             <p>{note.time_created}</p>
             <p>{note.time_modified}</p>
             <button onClick={() => deleteNote(note.note_id)}>DELETE</button>

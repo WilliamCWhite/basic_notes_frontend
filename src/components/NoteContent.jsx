@@ -1,7 +1,16 @@
-import { useState, useEffect, useRef, memo } from 'react'
+import { useState, useEffect, forwardRef, useImperativeHandle } from 'react'
 
-function NoteContent({ selectedNoteBody, updateNoteBodyInDB }) {
+function NoteContent({ selectedNoteBody, updateNoteBodyInDB }, noteContentRef) {
     const [noteBody, setNoteBody] = useState(selectedNoteBody);
+
+    useImperativeHandle(noteContentRef, () => ({
+        getNoteBody: () => {
+            if (selectedNoteBody === noteBody) {
+                return null;
+            }
+            return noteBody;
+        },
+    }));
 
     useEffect(() => {
         const timeoutID = setTimeout(() => {
@@ -31,4 +40,4 @@ function NoteContent({ selectedNoteBody, updateNoteBodyInDB }) {
     ) 
 }
 
-export default NoteContent
+export default forwardRef(NoteContent);
