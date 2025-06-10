@@ -2,29 +2,24 @@ import { useState, useEffect } from 'react'
 
 import '../styles/TitleBar.css'
 
-function TitleBar({ selectedNoteIndex, updateNoteInDB, notesArray, sortNotesArray }) {
-    const selectedNote = notesArray[selectedNoteIndex];
-    const [noteTitle, setNoteTitle] = useState(selectedNote.title);
+function TitleBar({ selectedNoteTitle, updateNoteTitleInDB }) {
+    const [noteTitle, setNoteTitle] = useState(selectedNoteTitle);
 
     useEffect(() => {
         const timeoutID = setTimeout(() => {
-            if (selectedNote.title !== noteTitle) {
-                const timeModified = new Date(Date.now()).toISOString();
-                updateNoteInDB(selectedNote.note_id, noteTitle, selectedNote.body, timeModified);
-
-                const tempNotesArray = [...notesArray];
-                tempNotesArray[selectedNoteIndex].title = noteTitle;
-                tempNotesArray[selectedNoteIndex].time_modified = timeModified;
-                sortNotesArray(tempNotesArray);
+            if (selectedNoteTitle !== noteTitle) {
+                console.log("We're updating a note in the database");
+                updateNoteTitleInDB(noteTitle);
             }
         }, 3000);
 
         return (() => clearTimeout(timeoutID));
     }, [noteTitle]);
 
+    // NOTE: not sure if this is necessary
     useEffect(() => {
-        setNoteTitle(selectedNote.title);
-    }, [selectedNote]);
+        setNoteTitle(selectedNoteTitle);
+    }, [selectedNoteTitle]);
 
     function handleInput(event) {
         setNoteTitle(event.target.value);

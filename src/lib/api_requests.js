@@ -38,7 +38,7 @@ export async function postNewNote(username, userKey) {
     }
 }
 
-export async function putUpdatedNote(note_id, title, body, time_modified) {
+export async function putUpdatedNote(username, userKey, note_id, title, body, time_modified) {
     console.log(`Attempting to update note with id: ${note_id}`)
     console.log('Our stringified JSON will look like this:');
     console.log({title: title, body: body, time_modified: time_modified});
