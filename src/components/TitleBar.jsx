@@ -2,6 +2,8 @@ import { useState, useEffect, forwardRef, useImperativeHandle } from 'react'
 
 import '../styles/TitleBar.css'
 
+const autosaveMS = 2500;
+
 function TitleBar({ selectedNoteId, selectedNoteTitle, updateNoteTitleInDB, deleteNote, toggleSidebar }, noteTitleRef) {
     const [noteTitle, setNoteTitle] = useState(selectedNoteTitle);
 
@@ -20,7 +22,7 @@ function TitleBar({ selectedNoteId, selectedNoteTitle, updateNoteTitleInDB, dele
                 console.log("We're updating a note in the database");
                 updateNoteTitleInDB(noteTitle);
             }
-        }, 3000);
+        }, 2500);
 
         return (() => clearTimeout(timeoutID));
     }, [noteTitle]);

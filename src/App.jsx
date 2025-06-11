@@ -6,14 +6,13 @@ import TitleBar from './components/TitleBar.jsx'
 import NoteContent from './components/NoteContent.jsx'
 import LoginScreen from './components/LoginScreen.jsx'
 
-import { getUserNotes, postNewNote, putUpdatedNote, deleteNoteRequest } from './lib/api_requests.js'
+import { getUserNotes, postNewNote, putUpdatedNote, deleteNoteRequest } from './lib/apiRequests.js'
 
 function App() {
     const [notesArray, setNotesArray] = useState();
     const [selectedNoteId, setSelectedNoteId] = useState();
 
-    const [sortProperty, setSortProperty] = useState('time_modified');
-    const [sortMethod, setSortMethod] = useState('DESC');
+    const [sortMethod, setSortMethod] = useState('time_modified-DESC');
 
     const [isSidebarShown, setIsSidebarShown] = useState(true);
 
@@ -201,8 +200,6 @@ function App() {
                         notesArray={notesArray} 
                         selectedNoteId={selectedNoteId}
                         switchNote={switchNote}
-                        sortProperty={sortProperty}
-                        setSortProperty={setSortProperty}
                         sortMethod={sortMethod}
                         setSortMethod={setSortMethod}
                         createNewNote={createNewNote}

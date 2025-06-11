@@ -2,6 +2,8 @@ import { useState, useEffect, forwardRef, useImperativeHandle } from 'react'
 
 import '../styles/NoteContent.css'
 
+const autosaveMS = 2500;
+
 function NoteContent({ selectedNoteId, selectedNoteBody, updateNoteBodyInDB }, noteContentRef) {
     const [noteBody, setNoteBody] = useState(selectedNoteBody);
 
@@ -20,7 +22,7 @@ function NoteContent({ selectedNoteId, selectedNoteBody, updateNoteBodyInDB }, n
                 console.log("We're updating a note in the database woah");
                 updateNoteBodyInDB(noteBody);
             }
-        }, 3000);
+        }, autosaveMS);
 
         return (() => clearTimeout(timeoutID));
     }, [noteBody])
