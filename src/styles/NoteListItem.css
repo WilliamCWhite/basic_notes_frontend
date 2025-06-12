@@ -1,3 +1,37 @@
+.note-list-item {
+    border-style: solid;
+    border-width: 0.25rem;
+    border-color: var(--border-1);
+    border-radius: 1rem;
+
+    margin: 0.25rem 0;
+
+    padding: 0.5rem;
+
+    color: var(--text-1);
+    background-color: var(--bg-1);
+    
+    cursor: grab;
+}
+
+.note-list-item h3 {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.note-list-item p {
+    color: var(--text-2);
+    font-style: italic;
+}
+
 .selected-note-list-item {
-    color: blue;
+    border-color: var(--hl-1);
+}
+
+.selected-note-list-item h3 {
+    color: var(--hl-1);
+}
+
+.selected-note-list-item p {
+    color: var(--hl-2);
 }

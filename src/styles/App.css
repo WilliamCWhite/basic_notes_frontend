@@ -1,6 +1,5 @@
 #full-screen {
-    background-color: #222;
-    width: 100vw;
+    width: 100%;
     height: 100vh;
     display: flex;
     justify-content: center;
@@ -8,14 +7,16 @@
 }
 
 #app-container {
-    background-color: white;
-    width: 80%;
-    height: 80%;
+    background-color: var(--bg-1);
+    width: 100%;
+    height: 100%;
+    padding: 2rem;
     display: flex;
 }
 
 #sidebar {
-    width: 20%;
+    width: 30vh;
+    flex-shrink: 0;
 }
 
 #main-section {

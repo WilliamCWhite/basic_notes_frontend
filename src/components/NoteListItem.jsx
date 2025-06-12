@@ -13,7 +13,6 @@ function NoteListItem({ note, switchNote, isSelected }) {
     return (
         <div className={classes} onClick={() => { switchNote(note.note_id) }}>
             <h3>{note.title}</h3>
-            <p>{note.time_created}</p>
             <p>{formattedTimeModified}</p>
         </div>
     )

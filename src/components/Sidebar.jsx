@@ -55,14 +55,17 @@ function Sidebar({ notesArray, selectedNoteId, switchNote, sortNotesArray, sortM
     return (
         <nav id='sidebar'>
             <div className='sidebar-button-bar'>
-                <select name="sortMethodSelect" defaultValue={sortMethod} onChange={handleMethodChange}>
-                    <option value="time_modified-DESC">Time Modified (new to old)</option>
-                    <option value="time_modified-ASC">Time Modified (old to new)</option>
-                    <option value="time_created-DESC">Time Created (new to old)</option>
-                    <option value="time_created-ASC">Time Created (old to new)</option>
-                    <option value="title-ASC">Title (A to Z)</option>
-                    <option value="title-DESC">Title (Z to A)</option>
-                </select>
+                <div className='filter-wrapper'>
+                    <select id='sort-method-select' name="sortMethodSelect" defaultValue={sortMethod} onChange={handleMethodChange}>
+                        <option value="time_modified-DESC">Time Modified (new to old)</option>
+                        <option value="time_modified-ASC">Time Modified (old to new)</option>
+                        <option value="time_created-DESC">Time Created (new to old)</option>
+                        <option value="time_created-ASC">Time Created (old to new)</option>
+                        <option value="title-ASC">Title (A to Z)</option>
+                        <option value="title-DESC">Title (Z to A)</option>
+                    </select>
+                    <span className='filter-icon'>O</span>
+                </div>
                 <button id='create-note-button' onClick={createNewNote} className='sidebar-button'>+</button>
             </div>
             <div id='note-list-container'>

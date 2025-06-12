@@ -1,0 +1,19 @@
+:root {
+    /* try to scale so 800px height = 14px font size */
+    font-size: clamp(12px, 1.75vh, 18px);
+
+    font-family: Inter, Helvetica, Arial, sans-serif;
+}
+
+:root {
+    --bg-1: #F0F0F0;
+    --bg-2: #CCC;
+
+    --text-1: #222;
+    --text-2: #666;
+
+    --border-1: #999;
+
+    --hl-1: #34e;
+    --hl-2: #6976EA;
+}
