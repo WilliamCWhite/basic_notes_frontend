@@ -1,26 +1,43 @@
 #sidebar {
     background-color: var(--bg-2);
-    border-radius: 1.25rem;
+    border-radius: 1.25rem 0 1.25rem 1.25rem;
     padding: 0.5rem;
 }
 
 .sidebar-button-bar {
     display: flex;
     justify-content: center;
-    height: 2rem;
+    height: 2.25rem;
     gap: 1rem;
+    padding-bottom: 0.25rem;
 }
 
 .filter-wrapper {
     position: relative;
+    color: var(--icon-1);
+}
+
+.filter-wrapper:hover {
+    color: var(--hl-2);
+}
+
+.filter-wrapper:active {
+    color: var(--hl-1);
 }
 
 .sidebar-button-bar .filter-wrapper,
 .sidebar-button-bar button {
-    width: 2.5rem;
+    width: 2rem;
     height: 100%;
-    border: solid 1px black;
+    border: none;
+    border-radius: 0.5rem;
     cursor: grab;
+    background-color: var(--bg-1);
+    padding: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #sort-method-select {
@@ -34,12 +51,28 @@
     height: 100%;
 }
 
+.create-icon {
+    width: 75%;
+    height: 75%;
+    color: var(--icon-1);
+}
+
+/*moved color to filter wrapper so it works*/
 .filter-icon {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1;
-    pointer-events: none;
-    height: 100%;
-    width: 100%;
+    width: 75%;
+    height: 75%;
+}
+
+.delete-icon {
+    width: 75%;
+    height: 75%;
+    color: var(--icon-1);
+}
+
+.sidebar-button-bar svg:hover {
+    color: var(--hl-2);
+}
+
+.sidebar-button-bar svg:active {
+    color: var(--hl-1);
 }

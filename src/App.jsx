@@ -170,6 +170,11 @@ function App() {
     //! RENDERING STARTS HERE
     let appContainerContent;
 
+    let displaySidebarButtonClasses = "";
+    if (!isSidebarShown) {
+        displaySidebarButtonClasses = "sidebar-button-sidebar-hidden";
+    }
+
     if (!userKey) {
         appContainerContent = (
             <LoginScreen 
@@ -203,16 +208,26 @@ function App() {
                         sortMethod={sortMethod}
                         setSortMethod={setSortMethod}
                         createNewNote={createNewNote}
+                        deleteNote={deleteNote}
                     />  
                 }
+                <div id='main-divider'>
+                    <button 
+                        id='display-sidebar-button'
+                        className={(displaySidebarButtonClasses)}
+                        onClick={() => toggleSidebar()}
+                    >
+                        <svg className="display-sidebar-icon" xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" viewBox="0 0 24 24" width="512" height="512">
+                            <path fill="currentColor" d="M19,2H5C2.243,2,0,4.243,0,7v10c0,2.757,2.243,5,5,5h14c2.757,0,5-2.243,5-5V7c0-2.757-2.243-5-5-5ZM2,17V7c0-1.654,1.346-3,3-3h4V20H5c-1.654,0-3-1.346-3-3Zm20,0c0,1.654-1.346,3-3,3H11V4h8c1.654,0,3,1.346,3,3v10ZM7,11c0,.553-.447,1-1,1h-1c-.553,0-1-.447-1-1s.447-1,1-1h1c.553,0,1,.447,1,1Zm0,4c0,.553-.447,1-1,1h-1c-.553,0-1-.447-1-1s.447-1,1-1h1c.553,0,1,.447,1,1ZM4,7c0-.553,.447-1,1-1h1c.553,0,1,.447,1,1s-.447,1-1,1h-1c-.553,0-1-.447-1-1Z"/>
+                        </svg>
+                    </button>
+                </div>
                 <main id='main-section'>
                     <TitleBar 
                         ref={noteTitleRef}
                         selectedNoteId={selectedNoteId}
                         selectedNoteTitle={getSelectedNote().title}
                         updateNoteTitleInDB={updateNoteTitleInDB}
-                        deleteNote={deleteNote}
-                        toggleSidebar={toggleSidebar}
                     />
                     <NoteContent 
                         ref={noteContentRef}

@@ -4,7 +4,7 @@ import '../styles/TitleBar.css'
 
 const autosaveMS = 2500;
 
-function TitleBar({ selectedNoteId, selectedNoteTitle, updateNoteTitleInDB, deleteNote, toggleSidebar }, noteTitleRef) {
+function TitleBar({ selectedNoteId, selectedNoteTitle, updateNoteTitleInDB }, noteTitleRef) {
     const [noteTitle, setNoteTitle] = useState(selectedNoteTitle);
 
     useImperativeHandle(noteTitleRef, () => ({
@@ -22,7 +22,7 @@ function TitleBar({ selectedNoteId, selectedNoteTitle, updateNoteTitleInDB, dele
                 console.log("We're updating a note in the database");
                 updateNoteTitleInDB(noteTitle);
             }
-        }, 2500);
+        }, autosaveMS);
 
         return (() => clearTimeout(timeoutID));
     }, [noteTitle]);
@@ -37,24 +37,12 @@ function TitleBar({ selectedNoteId, selectedNoteTitle, updateNoteTitleInDB, dele
 
     return (
         <div id='title-bar'>
-            <div className="left-align">
-                <button 
-                    id='display-sidebar-button'
-                    onClick={() => toggleSidebar()}
-                >Toggle</button>
-                <input 
-                    type="text" 
-                    id="title-input" 
-                    value={noteTitle} 
-                    onChange={handleInput}
-                />
-            </div>
-            <div className="right-align">
-                <button 
-                    id='delete-note-button' 
-                    onClick={() => deleteNote(selectedNoteId)}
-                >Delete</button>
-            </div>
+            <input 
+                type="text" 
+                id="title-input" 
+                value={noteTitle} 
+                onChange={handleInput}
+            />
         </div>
     )
 }
